@@ -4,7 +4,7 @@ import { storeSchema, updateSchema } from '../validations/UserValidation';
 
 class UserController {
   async store(request, response) {
-    const data = request.only(['name', 'email', 'password', 'isAdmin']);
+    const data = request.only(['name', 'email', 'password']);
 
     if (!(await storeSchema.isValid(request.all()))) {
       return response.status(400).json({ error: 'Validation fails' });
@@ -18,14 +18,14 @@ class UserController {
       return response.status(400).json({ error: 'User already exists' });
     }
 
-    const { id, name, isAdmin } = await User.create(data);
+    const { id, name } = await User.create(data);
 
-    return response.json({ id, name, email, isAdmin });
+    return response.json({ id, name, email });
   }
 
   async update(request, response) {
     const { userId } = request;
-    const data = request.only(['email', 'name', 'isAdmin']);
+    const data = request.only(['email', 'name']);
 
     if (!(await updateSchema.isValid(data))) {
       return response.status(400).json({ error: 'Validation fails' });

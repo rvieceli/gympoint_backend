@@ -6,7 +6,7 @@ export default async (request, response, next) => {
   const { authorization } = request.headers;
 
   if (!authorization) {
-    return response.status(401).jsons({ error: 'Token not provided' });
+    return response.status(401).json({ error: 'Token not provided' });
   }
 
   const [, token] = authorization.split(' ');
