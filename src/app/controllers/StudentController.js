@@ -1,5 +1,7 @@
 import Student from '../models/Student';
 
+import { storeSchema, updateSchema } from '../validations/StudentValidation';
+
 class StudentController {
   async index(request, response) {
     const { page = 1 } = request.query;
@@ -27,6 +29,15 @@ class StudentController {
   async store(request, response) {
     const { email } = request.all();
 
+    try {
+      await storeSchema.validate(request.all(), { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
+    }
+
     const exists = await Student.findOne({ where: { email } });
 
     if (exists) {
@@ -42,6 +53,15 @@ class StudentController {
     const { id } = request.params;
     const { email } = request.all();
 
+    try {
+      await updateSchema.validate(request.all(), { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
+    }
+
     const student = await Student.findByPk(id);
 
     if (!student) {
@@ -49,7 +69,7 @@ class StudentController {
     }
 
     if (email && email !== student.email) {
-      const exists = await student.findOne({ where: { email } });
+      const exists = await Student.findOne({ where: { email } });
 
       if (exists) {
         return response.status(400).json({ error: 'User already exists' });
