@@ -30,8 +30,13 @@ class PlanController {
   async store(request, response) {
     const data = request.only(['title', 'duration', 'price']);
 
-    if (!(await storeSchema.isValid(data))) {
-      return response.status(400).json({ error: 'Validation fails' });
+    try {
+      await storeSchema.validate(data, { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
     }
 
     const plan = await Plan.create(data);
@@ -42,8 +47,13 @@ class PlanController {
   async update(request, response) {
     const data = request.only(['title', 'duration', 'price']);
 
-    if (!(await updateSchema.isValid(data))) {
-      return response.status(400).json({ error: 'Validation fails' });
+    try {
+      await updateSchema.validate(data, { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
     }
 
     const { id } = request.params;

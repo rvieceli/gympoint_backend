@@ -7,8 +7,13 @@ class PasswordController {
     const { userId } = request;
     const { oldPassword, password } = request.only(['oldPassword', 'password']);
 
-    if (!(await updateSchema.isValid(request.all()))) {
-      return response.status(400).json({ error: 'Validation fails' });
+    try {
+      await updateSchema.validate(request.all(), { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
     }
 
     const user = await User.findByPk(userId);

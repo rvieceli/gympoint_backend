@@ -6,8 +6,13 @@ class UserController {
   async store(request, response) {
     const data = request.only(['name', 'email', 'password']);
 
-    if (!(await storeSchema.isValid(request.all()))) {
-      return response.status(400).json({ error: 'Validation fails' });
+    try {
+      await storeSchema.validate(request.all(), { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
     }
 
     const { email } = data;
@@ -27,8 +32,13 @@ class UserController {
     const { userId } = request;
     const data = request.only(['email', 'name']);
 
-    if (!(await updateSchema.isValid(data))) {
-      return response.status(400).json({ error: 'Validation fails' });
+    try {
+      await updateSchema.validate(data, { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
     }
 
     const { email } = data;

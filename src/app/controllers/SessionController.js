@@ -8,8 +8,13 @@ class SessionController {
   async store(request, response) {
     const { email, password } = request.body;
 
-    if (!(await storeSchema.isValid({ email, password }))) {
-      return response.status(400).json({ error: 'Validation fails' });
+    try {
+      await storeSchema.validate({ email, password }, { abortEarly: false });
+    } catch (err) {
+      return response.status(400).json({
+        error: 'Validation failed',
+        [err.name]: err.inner,
+      });
     }
 
     const user = await User.findOne({ where: { email } });
