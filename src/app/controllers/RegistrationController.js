@@ -1,16 +1,14 @@
-import {
-  parseISO,
-  addMonths,
-  subDays,
-  isAfter,
-  isBefore,
-  startOfDay,
-} from 'date-fns';
+import { parseISO, addMonths, subDays, isAfter, startOfDay } from 'date-fns';
 import { Op } from 'sequelize';
 
 import Registration from '../models/Registration';
 import Plan from '../models/Plan';
 import Student from '../models/Student';
+
+import RegistrationMail from '../jobs/RegistrationMail';
+import RegistrationUpdateMail from '../jobs/RegistrationUpdateMail';
+import RegistrationCancelMail from '../jobs/RegistrationCancelMail';
+import Queue from '../../lib/Queue';
 
 import {
   storeSchema,
@@ -123,13 +121,30 @@ class RegistrationController {
       price,
     });
 
+    Queue.add(RegistrationMail.key, {
+      registration,
+      student,
+      plan,
+    });
+
     return response.json(registration);
   }
 
   async update(request, response) {
     const { id } = request.params;
 
-    const registration = await Registration.findByPk(id);
+    const registration = await Registration.findByPk(id, {
+      include: [
+        {
+          model: Plan,
+          as: 'plan',
+        },
+        {
+          model: Student,
+          as: 'student',
+        },
+      ],
+    });
 
     if (!registration) {
       return response.status(401).json({ error: `Registrations not found` });
@@ -197,6 +212,8 @@ class RegistrationController {
 
     const price = plan.price * plan.duration;
 
+    const { student } = registration;
+
     await registration.update({
       plan_id: plan.id,
       startDate,
@@ -204,12 +221,26 @@ class RegistrationController {
       price,
     });
 
+    Queue.add(RegistrationUpdateMail.key, {
+      student,
+      plan,
+      registration,
+    });
+
     return response.send(registration);
   }
 
   async delete(request, response) {
     const { id } = request.params;
-    const registration = await Registration.findByPk(id);
+    const registration = await Registration.findByPk(id, {
+      include: [
+        {
+          model: Student,
+          as: 'student',
+          attributes: ['name'],
+        },
+      ],
+    });
 
     if (!registration) {
       return response.status(401).json({ error: `Registrations not found` });
@@ -221,7 +252,13 @@ class RegistrationController {
         .json({ error: `You can't delete after the registration is started` });
     }
 
+    const { student } = registration;
+
     await registration.destroy();
+
+    Queue.add(RegistrationCancelMail.key, {
+      student,
+    });
 
     return response.send();
   }
