@@ -8,11 +8,15 @@ import PasswordController from './app/controllers/PasswordController';
 import StudentController from './app/controllers/StudentController';
 import PlanController from './app/controllers/PlanController';
 import RegistrationController from './app/controllers/RegistrationController';
+import CheckInController from './app/controllers/CheckInController';
 
 const routes = new Router();
 
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
+
+routes.post('/students/:id/checkins', CheckInController.store);
+routes.get('/students/:id/checkins', CheckInController.index);
 
 routes.use(authMiddleware);
 
