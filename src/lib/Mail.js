@@ -30,6 +30,9 @@ class Mail {
           partialsDir: resolve(viewPath, 'partials'),
           defaultLayout: 'default',
           extname: '.hbs',
+          helpers: {
+            appUrl: () => process.env.APP_URL,
+          },
         }),
         viewPath,
         extName: '.hbs',

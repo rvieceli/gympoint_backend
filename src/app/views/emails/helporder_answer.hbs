@@ -23,20 +23,20 @@
   }
 </style>
 
-<p>Olá <strong>{{studentName}}</strong></p>
+<p>Olá <strong>{{studentName}}</strong></p> {{ subject }}
 <br />
 <p>Sua pergunta foi respondida.</p>
 <br />
 <div class="questionAnswer">
   <div class="questionAnswerImg">
-    <img src="http://localhost:3333/static/question_32px.png" alt="Question">
+    <img src="{{ appUrl }}/static/question_32px.png" alt="Question">
   </div>
   <p class="questionanswerParagraph">{{question}}</p>
 </div>
 <br />
 <div class="questionAnswer">
   <div class="questionAnswerImg">
-    <img src="http://localhost:3333/static/answer_32px.png" alt="Answer">
+    <img src="{{ appUrl }}/static/answer_32px.png" alt="Answer">
   </div>
   <p class="questionanswerParagraph">{{answer}}</p>
 </div>

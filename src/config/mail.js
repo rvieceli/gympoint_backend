@@ -1,12 +1,12 @@
 export default {
-  host: '192.168.99.100',
-  port: '1025',
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
   secure: false,
   auth: {
-    user: null,
-    password: null,
+    user: process.env.MAIL_USER || null,
+    password: process.env.MAIL_PASS || null,
   },
   default: {
-    from: 'Noreply <noreply@gympass.com>',
+    from: process.env.MAIL_FROM,
   },
 };
