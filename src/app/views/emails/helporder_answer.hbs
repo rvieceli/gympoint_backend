@@ -1,0 +1,42 @@
+<style>
+  .questionAnswer {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .questionAnswerImg {
+    width: 32px;
+    height: 32px;
+
+    margin-left: 10px;
+    margin-bottom: -10px;
+    z-index: 1;
+  }
+
+  .questionanswerParagraph {
+    text-align: justify;
+    padding: 10px;
+    background-color: #eee;
+    width: 100%;
+    z-index: 0;
+  }
+</style>
+
+<p>Olá <strong>{{studentName}}</strong></p>
+<br />
+<p>Sua pergunta foi respondida.</p>
+<br />
+<div class="questionAnswer">
+  <div class="questionAnswerImg">
+    <img src="http://localhost:3333/static/question_32px.png" alt="Question">
+  </div>
+  <p class="questionanswerParagraph">{{question}}</p>
+</div>
+<br />
+<div class="questionAnswer">
+  <div class="questionAnswerImg">
+    <img src="http://localhost:3333/static/answer_32px.png" alt="Answer">
+  </div>
+  <p class="questionanswerParagraph">{{answer}}</p>
+</div>

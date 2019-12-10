@@ -5,8 +5,14 @@ import redisConfig from '../config/redis';
 import RegistrationMail from '../app/jobs/RegistrationMail';
 import RegistrationUpdateMail from '../app/jobs/RegistrationUpdateMail';
 import RegistrationCancelMail from '../app/jobs/RegistrationCancelMail';
+import HelpOrderAnswerMail from '../app/jobs/HelpOrderAnswerMail';
 
-const jobs = [RegistrationMail, RegistrationUpdateMail, RegistrationCancelMail];
+const jobs = [
+  RegistrationMail,
+  RegistrationUpdateMail,
+  RegistrationCancelMail,
+  HelpOrderAnswerMail,
+];
 
 class Queue {
   constructor() {

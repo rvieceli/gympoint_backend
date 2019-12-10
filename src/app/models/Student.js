@@ -27,6 +27,10 @@ class Student extends Model {
       foreignKey: 'student_id',
       as: 'checkIns',
     });
+    this.hasMany(models.HelpOrder, {
+      foreignKey: 'student_id',
+      as: 'helpOrders',
+    });
   }
 }
 
