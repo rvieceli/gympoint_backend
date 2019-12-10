@@ -8,7 +8,7 @@ Backend da aplicação __Gympoint__ para avaliação final do GoStack.
     - __POST__ Create an user
     - __PUT__ Update user except password __*#authRequired*__
 2. Password
-    - __PUT__ Update: only password *#authRequired*
+    - __PUT__ Update: only password __*#authRequired*__
 3. Forgot Password
     - __POST__ Create token and sending e-mail with link to reset
     - __PUT__ Update
@@ -38,7 +38,7 @@ Backend da aplicação __Gympoint__ para avaliação final do GoStack.
 8. Help orders - Questions
     - __GET__ List all of a student with pagination
     - __POST__ Create
-8. Help orders - Answer
+8. Help orders - Answer __*#authRequired*__
     - __GET__ List all non answered questions
     - __POST__ Create an answer
 
