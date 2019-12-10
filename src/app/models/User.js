@@ -9,7 +9,8 @@ class User extends Model {
         email: Sequelize.STRING,
         password: Sequelize.VIRTUAL,
         password_hash: Sequelize.STRING,
-        isAdmin: Sequelize.BOOLEAN,
+        resetPasswordToken: Sequelize.UUID,
+        resetPasswordExpires: Sequelize.DATE,
       },
       {
         sequelize,

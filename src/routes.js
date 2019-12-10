@@ -5,6 +5,8 @@ import UserController from './app/controllers/UserController';
 import SessionController from './app/controllers/SessionController';
 import PasswordController from './app/controllers/PasswordController';
 
+import ForgotPasswordController from './app/controllers/ForgotPasswordController';
+
 import StudentController from './app/controllers/StudentController';
 import PlanController from './app/controllers/PlanController';
 import RegistrationController from './app/controllers/RegistrationController';
@@ -17,6 +19,9 @@ const routes = new Router();
 
 routes.post('/users', UserController.store);
 routes.post('/sessions', SessionController.store);
+
+routes.post('/forgot-password', ForgotPasswordController.store);
+routes.put('/forgot-password/:token', ForgotPasswordController.update);
 
 routes.post('/students/:id/checkins', CheckInController.store);
 routes.get('/students/:id/checkins', CheckInController.index);
