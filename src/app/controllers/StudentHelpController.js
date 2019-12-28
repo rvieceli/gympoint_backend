@@ -6,18 +6,24 @@ import { questionSchema } from '../validations/HelpOrderValidation';
 class StudentHelpController {
   async index(request, response) {
     const { id } = request.params;
-    const { page = 1, pageSize = 20 } = request.query;
+    const { page = 1, pageSize = 10 } = request.query;
 
-    const helpOrders = await HelpOrder.findAll({
+    const { count, rows } = await HelpOrder.findAndCountAll({
       where: {
         student_id: id,
       },
-      page,
+      limit: pageSize,
       offset: (page - 1) * pageSize,
       attributes: { exclude: ['student_id'] },
+      order: [['updated_at', 'DESC']],
     });
 
-    return response.json(helpOrders);
+    return response.json({
+      page: +page,
+      pageSize: +pageSize,
+      pages: Math.ceil(count / pageSize),
+      rows,
+    });
   }
 
   async store(request, response) {
@@ -33,8 +39,7 @@ class StudentHelpController {
     }
 
     const { id } = request.params;
-
-    const student = Student.findByPk(id);
+    const student = await Student.findByPk(id);
 
     if (!student) {
       return response.status(401).json({ error: 'Student not found' });

@@ -17,10 +17,10 @@ import {
 
 class RegistrationController {
   async index(request, response) {
-    const { page = 1 } = request.query;
-    const registrations = await Registration.findAll({
-      page,
-      offset: (page - 1) * 20,
+    const { page = 1, pageSize = 10 } = request.query;
+    const { count, rows } = await Registration.findAndCountAll({
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
       include: [
         {
           model: Plan,
@@ -36,7 +36,12 @@ class RegistrationController {
       attributes: { exclude: ['plan_id', 'student_id'] },
     });
 
-    return response.json(registrations);
+    return response.json({
+      page: +page,
+      pageSize: +pageSize,
+      pages: Math.ceil(count / pageSize),
+      rows,
+    });
   }
 
   async show(request, response) {
@@ -46,15 +51,14 @@ class RegistrationController {
         {
           model: Plan,
           as: 'plan',
-          attributes: ['title', 'duration', 'price'],
+          attributes: ['id', 'title', 'duration', 'price'],
         },
         {
           model: Student,
           as: 'student',
-          attributes: ['name', 'age', 'weight', 'height'],
+          attributes: ['id', 'name', 'age', 'weight', 'height'],
         },
       ],
-      attributes: { exclude: ['plan_id', 'student_id'] },
     });
 
     if (!registration) {

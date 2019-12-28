@@ -4,15 +4,21 @@ import { storeSchema, updateSchema } from '../validations/PlanValidation';
 
 class PlanController {
   async index(request, response) {
-    const { page = 1 } = request.query;
+    const { page = 1, pageSize = 10 } = request.query;
 
-    const plans = await Plan.findAll({
-      limit: 20,
-      offset: (page - 1) * 20,
-      attributes: ['title', 'duration', 'price'],
+    const { rows, count } = await Plan.findAndCountAll({
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+      attributes: ['id', 'title', 'duration', 'price'],
+      order: [['duration', 'ASC']],
     });
 
-    return response.json(plans);
+    return response.json({
+      page: +page,
+      pageSize: +pageSize,
+      pages: Math.ceil(count / pageSize),
+      rows,
+    });
   }
 
   async show(request, response) {

@@ -8,9 +8,9 @@ import HelpOrderAnswerMail from '../jobs/HelpOrderAnswerMail';
 
 class GymHelpController {
   async index(request, response) {
-    const { page = 1, pageSize = 20 } = request.query;
+    const { page = 1, pageSize = 10 } = request.query;
 
-    const helpOrders = await HelpOrder.findAll({
+    const { count, rows } = await HelpOrder.findAndCountAll({
       where: {
         answer: null,
       },
@@ -26,7 +26,12 @@ class GymHelpController {
       ],
     });
 
-    return response.json(helpOrders);
+    return response.json({
+      page: +page,
+      pageSize: +pageSize,
+      pages: Math.ceil(count / pageSize),
+      rows,
+    });
   }
 
   async store(request, response) {

@@ -15,6 +15,7 @@ class RegistrationMail {
       subject: 'Sua matrícula foi feita com sucesso!',
       template: 'registration',
       context: {
+        studentId: student.id,
         studentName: student.name,
         planTitle: plan.title,
         registrationPrice: registration.price,

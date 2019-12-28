@@ -4,16 +4,17 @@ export const storeSchema = Yup.object().shape({
   title: Yup.string().required(),
   duration: Yup.number()
     .integer()
+    .positive()
     .required(),
   price: Yup.number()
-    .integer()
+    .positive()
     .required(),
 });
 
 export const updateSchema = Yup.object().shape({
   title: Yup.string(),
   duration: Yup.number().integer(),
-  price: Yup.number().integer(),
+  price: Yup.number().positive(),
 });
 
 export default { storeSchema, updateSchema };

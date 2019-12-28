@@ -1,4 +1,5 @@
 import Sequelize, { Model } from 'sequelize';
+import { isWithinInterval, parseISO } from 'date-fns';
 
 class Registration extends Model {
   static init(sequelize) {
@@ -7,6 +8,19 @@ class Registration extends Model {
         startDate: Sequelize.DATEONLY,
         endDate: Sequelize.DATEONLY,
         price: Sequelize.INTEGER,
+        active: {
+          type: Sequelize.VIRTUAL(Sequelize.BOOLEAN, [
+            'start_date',
+            'end_date',
+          ]),
+          get() {
+            if (!this.get('start_date') || !this.get('end_date')) return false;
+            return isWithinInterval(new Date(), {
+              start: parseISO(this.get('start_date')),
+              end: parseISO(this.get('end_date')),
+            });
+          },
+        },
       },
       {
         sequelize,

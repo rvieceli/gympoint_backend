@@ -1,17 +1,33 @@
+import Sequelize, { Op } from 'sequelize';
 import Student from '../models/Student';
 
 import { storeSchema, updateSchema } from '../validations/StudentValidation';
 
 class StudentController {
   async index(request, response) {
-    const { page = 1 } = request.query;
+    const { page = 1, pageSize = 10, q } = request.query;
 
-    const students = await Student.findAll({
-      limit: 20,
-      offset: (page - 1) * 20,
+    const where = q
+      ? Sequelize.where(
+          Sequelize.fn('f_unaccent', Sequelize.col('name')),
+          Op.iLike,
+          Sequelize.fn('f_unaccent', `%${q}%`)
+        )
+      : null;
+
+    const { rows, count } = await Student.findAndCountAll({
+      where,
+      limit: pageSize,
+      offset: (page - 1) * pageSize,
+      order: [['name', 'ASC']],
     });
 
-    return response.json(students);
+    return response.json({
+      page: +page,
+      pageSize: +pageSize,
+      pages: Math.ceil(count / pageSize),
+      rows,
+    });
   }
 
   async show(request, response) {

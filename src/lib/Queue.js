@@ -7,6 +7,7 @@ import RegistrationUpdateMail from '../app/jobs/RegistrationUpdateMail';
 import RegistrationCancelMail from '../app/jobs/RegistrationCancelMail';
 import HelpOrderAnswerMail from '../app/jobs/HelpOrderAnswerMail';
 import ForgotPasswordMail from '../app/jobs/ForgotPasswordMail';
+import StudentAccessTokenMail from '../app/jobs/StudentAccessTokenMail';
 
 const jobs = [
   RegistrationMail,
@@ -14,6 +15,7 @@ const jobs = [
   RegistrationCancelMail,
   HelpOrderAnswerMail,
   ForgotPasswordMail,
+  StudentAccessTokenMail,
 ];
 
 class Queue {
